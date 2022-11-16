@@ -1,19 +1,11 @@
 package jreader
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestParse(t *testing.T) {
-	urls := []string{
-		"https://feeds.fireside.fm/bibleinayear/rss",
-		"https://blog.centos.org/feed",
-		"https://www.theregister.com/software/devops/headlines.atom",
-	}
 
-	got := Parse(urls)
-	fmt.Println(got)
 }
 
 // TODO:
