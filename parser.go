@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -59,8 +60,11 @@ var DefaultFetchFunc = func(url string) (resp *http.Response, err error) {
 
 // Parse RSS or Atom data.
 func parse(data []byte) ([]*RssItem, error) {
-	//if strings.Contains(string(data), "<rss") {
-	return parseRSS2(data)
+	if strings.Contains(string(data), "<rss") {
+		return parseRSS2(data)
+	}
+	//else if strings.Contains(string(data), "xmlns=\"http://purl.org/rss/1.0/\"") {
+	return parseRSS1(data)
 	//}
 }
 
