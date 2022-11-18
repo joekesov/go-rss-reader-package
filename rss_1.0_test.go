@@ -1,7 +1,7 @@
 package jreader
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -13,7 +13,7 @@ func TestParseRSS(t *testing.T) {
 
 	for test, _ := range tests {
 		name := filepath.Join("testdata", test)
-		data, err := ioutil.ReadFile(name)
+		data, err := os.ReadFile(name)
 		if err != nil {
 			t.Fatalf("Reading %s: %v", name, err)
 		}

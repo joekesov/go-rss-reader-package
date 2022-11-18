@@ -29,21 +29,6 @@ func Parse(urls []string) ([]*RssItem, error) {
 		}
 
 		fmt.Println(feed)
-
-		//for _, item := range feed.Items {
-		//	fmt.Println(item.Content)
-		//	item := RssItem{
-		//		Title:     item.Title,
-		//		Source:    feed.Title,
-		//		SourceURL: stringUrl,
-		//		Link:      item.Link,
-		//		//Description: item.Description,
-		//		PublishDate: item.Date,
-		//	}
-		//
-		//	rssItems = append(rssItems, item)
-		//}
-
 	}
 
 	return rssItems, nil
@@ -62,10 +47,11 @@ var DefaultFetchFunc = func(url string) (resp *http.Response, err error) {
 func parse(data []byte) ([]*RssItem, error) {
 	if strings.Contains(string(data), "<rss") {
 		return parseRSS2(data)
+	} else if strings.Contains(string(data), "xmlns=\"http://purl.org/rss/1.0/\"") {
+		return parseRSS1(data)
+	} else {
+		return parseAtom(data)
 	}
-	//else if strings.Contains(string(data), "xmlns=\"http://purl.org/rss/1.0/\"") {
-	return parseRSS1(data)
-	//}
 }
 
 // Fetch downloads and parses the RSS feed at the given URL
