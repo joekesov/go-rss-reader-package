@@ -1,6 +1,9 @@
 package jreader
 
 import (
+	"fmt"
+	"io"
+	"net/http"
 	"time"
 )
 
@@ -10,22 +13,78 @@ type RssItem struct {
 	SourceURL   string
 	Link        string
 	PublishDate time.Time
+	Description string
 }
 
-func Parse(urls []string) []RssItem {
-	var rssItems []RssItem
+func Parse(urls []string) ([]*RssItem, error) {
+	rssItems := make([]*RssItem, 0)
 
-	return rssItems
+	for _, stringUrl := range urls {
+		feed, err := fetch(stringUrl)
+		if err != nil {
+			// handle error.
+			return nil, err
+		}
+
+		fmt.Println(feed)
+
+		//for _, item := range feed.Items {
+		//	fmt.Println(item.Content)
+		//	item := RssItem{
+		//		Title:     item.Title,
+		//		Source:    feed.Title,
+		//		SourceURL: stringUrl,
+		//		Link:      item.Link,
+		//		//Description: item.Description,
+		//		PublishDate: item.Date,
+		//	}
+		//
+		//	rssItems = append(rssItems, item)
+		//}
+
+	}
+
+	return rssItems, nil
 }
 
-// TODO:
-// Returns the sum of two numbers
-func Add(a int, b int) int {
-	return a + b
+// A FetchFunc is a function that fetches a feed for given URL.
+type fetchFunc func(url string) (resp *http.Response, err error)
+
+// DefaultFetchFunc uses http.DefaultClient to fetch a feed.
+var DefaultFetchFunc = func(url string) (resp *http.Response, err error) {
+	client := http.DefaultClient
+	return client.Get(url)
 }
 
-// TODO:
-// Returns the difference between two numbers
-func Subtract(a int, b int) int {
-	return a - b
+// Parse RSS or Atom data.
+func parse(data []byte) ([]*RssItem, error) {
+	//if strings.Contains(string(data), "<rss") {
+	return parseRSS2(data)
+	//}
+}
+
+// Fetch downloads and parses the RSS feed at the given URL
+func fetch(url string) ([]*RssItem, error) {
+	return fetchByFunc(DefaultFetchFunc, url)
+}
+
+// FetchByFunc uses a func to fetch a URL.
+func fetchByFunc(fetchFunc fetchFunc, url string) ([]*RssItem, error) {
+	resp, err := fetchFunc(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	out, err := parse(body)
+	if err != nil {
+		return nil, err
+	}
+
+	return out, nil
 }
