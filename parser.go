@@ -13,6 +13,7 @@ type RssItem struct {
 	SourceURL   string
 	Link        string
 	PublishDate time.Time
+	DateValid   bool
 	Description string
 }
 

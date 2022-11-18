@@ -28,6 +28,18 @@ func parseRSS2(data []byte) ([]*RssItem, error) {
 		// TODO: SourceURL
 		next.Link = i.Link
 		// TODO: PublishDate
+		if i.PubDate != "" {
+			next.PublishDate, err = parseTime(i.PubDate)
+			if err == nil {
+				next.DateValid = true
+			}
+		} else if i.Date != "" {
+			next.PublishDate, err = parseTime(i.Date)
+			if err == nil {
+				next.DateValid = true
+			}
+		}
+
 		next.Description = i.Description
 
 		out = append(out, next)
