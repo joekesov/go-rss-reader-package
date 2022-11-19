@@ -1,30 +1,40 @@
 package jreader
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"testing"
 )
 
 func TestParse(t *testing.T) {
-	fetch1 := makeTestdataFetchFunc("rss_2.0.xml")
-	got, err := fetchByFunc(fetch1, "http://localhost/dummyrss")
+	DefaultFetchFunc = func(url string) (resp *http.Response, err error) {
+		// Create mock http.Response
+		resp = new(http.Response)
+		resp.Body, err = os.Open("testdata/" + url)
+
+		return resp, err
+	}
+
+	urls := []string{
+		"rss_2.0.xml",
+		"rss_2.0_content_encoded.xml",
+		"rss_2.0_enclosure.xml",
+		"rss_2.0-1.xml",
+		"rss_2.0-1_enclosure.xml",
+		"rss_1.0.xml",
+		"atom_1.0.xml",
+		"atom_1.0_enclosure.xml",
+		"atom_1.0-1.xml",
+		"atom_1.0_html.xml",
+	}
+
+	result, err := Parse(urls)
 	if err != nil {
 		t.Fatalf("Failed fetching testdata 'rss_2.0.xml': %v", err)
 	}
 
-	for _, i := range got {
-		fmt.Println(i)
-	}
-}
-
-func makeTestdataFetchFunc(file string) fetchFunc {
-	return func(url string) (resp *http.Response, err error) {
-		// Create mock http.Response
-		resp = new(http.Response)
-		resp.Body, err = os.Open("testdata/" + file)
-
-		return resp, err
+	want := 92
+	if len(result) != want {
+		t.Errorf("got %d, want %d", len(result), want)
 	}
 }
