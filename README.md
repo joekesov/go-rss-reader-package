@@ -1,32 +1,32 @@
-# github.com/mitchallen/go-lib
+# github.com/joekesov/go-rss-reader-package
 
 ## Usage
 
 ### Initialize your module
 
-```
-$ go mod init example.com/my-golib-demo
+```bash
+go mod init example.com/my-golib-demo
 ```
 
-### Get the go-lib module
+### Get the go-rss-reader-package
 
-Note that you need to include the **v** in the version tag.
+```bash
+go get github.com/joekesov/go-rss-reader-package@v0.1.0
+```
 
-```
-$ go get github.com/joekesov/go-rss-reader-package@v0.1.0
-```
+And in your main function is it like below
 
 ```go
 package main
 
 import (
     ...
-    jrss "github.com/joekesov/go-rss-reader-package"
+    "github.com/joekesov/go-rss-reader-package"
 )
 
 func main() {
 	urls := []string {"https://example.com/rss/feed"}
-	rssItems, err := jrss.Parse(urls)
+	rssItems, err := jreader.Parse(urls)
 	if err != nil {
 		// handle error
 	}
