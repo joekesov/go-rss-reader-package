@@ -13,21 +13,24 @@ $ go mod init example.com/my-golib-demo
 Note that you need to include the **v** in the version tag.
 
 ```
-$ go get github.com/mitchallen/go-lib@v0.1.0
+$ go get github.com/joekesov/go-rss-reader-package@v0.1.0
 ```
 
 ```go
 package main
 
 import (
-    "fmt"
-
-    "github.com/mitchallen/go-lib"
+    ...
+    jrss "github.com/joekesov/go-rss-reader-package"
 )
 
 func main() {
-    fmt.Println(golib.Add(2,3))
-    fmt.Println(golib.Subtract(2,3))
+	urls := []string {"https://example.com/rss/feed"}
+	rssItems, err := jrss.Parse(urls)
+	if err != nil {
+		// handle error
+	}
+	...
 }
 ```
 

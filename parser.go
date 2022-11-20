@@ -11,13 +11,13 @@ import (
 )
 
 type RssItem struct {
-	Title       string
-	Source      string
-	SourceURL   string
-	Link        string
-	PublishDate time.Time
+	Title       string    `json:"title"`
+	Source      string    `json:"source"`
+	SourceURL   string    `json:"source_url"`
+	Link        string    `json:"link"`
+	PublishDate time.Time `json:"publish-date"`
 	DateValid   bool
-	Description string
+	Description string `json:"description"`
 }
 
 func Parse(urls []string) ([]*RssItem, error) {
